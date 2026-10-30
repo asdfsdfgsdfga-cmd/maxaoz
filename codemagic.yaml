@@ -1,0 +1,53 @@
+workflows:
+  ios-native:
+    name: maxAOZ iOS IPA
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      # 手动签名：需在 Codemagic 应用的「Signing」页面上传 distribution 证书(.p12) 和 provisioning profile
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.maxaozx.www
+
+    scripts:
+      - name: Install npm dependencies
+        script: npm install
+
+      - name: Build React web assets
+        script: npm run build
+
+      - name: Sync web assets to Capacitor iOS project
+        script: npx cap sync ios
+
+      - name: Apply iOS code signing
+        script: |
+          xcode-project use-profiles
+
+      - name: Archive and export IPA
+        script: |
+          cd ios/App
+          xcodebuild \
+            -project App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$CM_BUILD_DIR/build/App.xcarchive" \
+            archive
+          cd "$CM_BUILD_DIR"
+          xcode-project export-ipa \
+            --archive-path "$CM_BUILD_DIR/build/App.xcarchive" \
+            --export-method app-store \
+            --output-directory "$CM_BUILD_DIR/build/ios/ipa"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/App.xcarchive/*
+
+    publishing:
+      email:
+        recipients:
+          - th682319@gmail.com
+        notify:
+          success: true
+          failure: true
