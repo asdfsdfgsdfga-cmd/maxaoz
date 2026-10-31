@@ -14,6 +14,7 @@ export interface AuthState {
   login: (email: string, password: string) => { ok: boolean; error?: string };
   register: (name: string, email: string, password: string) => { ok: boolean; error?: string };
   logout: () => void;
+  deleteAccount: () => void;
   favorites: string[];
   toggleFavorite: (coinId: string) => void;
   isFavorite: (coinId: string) => boolean;

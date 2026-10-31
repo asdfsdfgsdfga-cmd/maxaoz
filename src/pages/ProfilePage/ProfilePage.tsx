@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Mail, Calendar, Star, LogOut, Globe, Sun, Moon } from "lucide-react";
+import { User, Mail, Calendar, Star, LogOut, Globe, Sun, Moon, Trash2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useT } from "@/lib/i18n-context";
 import { LANGS, type Lang } from "@/lib/i18n-dict";
@@ -9,7 +10,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
-  const { user, favorites, logout } = useAuth();
+  const { user, favorites, logout, deleteAccount } = useAuth();
   const navigate = useNavigate();
   const { t, lang, setLang } = useT();
   const { theme, setTheme } = useTheme();
@@ -104,6 +105,65 @@ export default function ProfilePage() {
       >
         <LogOut className="h-4 w-4" /> {t("profile.signOut")}
       </button>
+
+      <DeleteAccountButton
+        onConfirm={() => { deleteAccount(); navigate("/"); }}
+        t={t}
+      />
+    </div>
+  );
+}
+
+function DeleteAccountButton({
+  onConfirm,
+  t,
+}: {
+  onConfirm: () => void;
+  t: (
+    k:
+      | "profile.deleteAccount"
+      | "profile.deleteAccountHint"
+      | "profile.deleteConfirmTitle"
+      | "profile.deleteConfirmDesc"
+      | "profile.cancel"
+      | "profile.confirmDelete",
+  ) => string;
+}) {
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <div className="mt-3">
+      {confirming ? (
+        <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-destructive">
+            <Trash2 className="h-4 w-4" /> {t("profile.deleteConfirmTitle")}
+          </div>
+          <p className="mt-1.5 text-xs text-muted-foreground">{t("profile.deleteConfirmDesc")}</p>
+          <div className="mt-3 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              className="flex-1 rounded-lg border border-border bg-card py-2.5 text-sm font-medium text-muted-foreground"
+            >
+              {t("profile.cancel")}
+            </button>
+            <button
+              type="button"
+              onClick={onConfirm}
+              className="flex-1 rounded-lg bg-destructive py-2.5 text-sm font-semibold text-destructive-foreground"
+            >
+              {t("profile.confirmDelete")}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setConfirming(true)}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-destructive/30 py-3 text-sm font-medium text-destructive"
+        >
+          <Trash2 className="h-4 w-4" /> {t("profile.deleteAccount")}
+        </button>
+      )}
     </div>
   );
 }

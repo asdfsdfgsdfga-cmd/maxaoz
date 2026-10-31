@@ -85,6 +85,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setFavorites([]);
   }, []);
 
+  const deleteAccount = useCallback(() => {
+    if (!currentEmail) return;
+    const email = currentEmail;
+    // 从账号列表移除当前账户
+    const next = accounts.filter((a) => a.email !== email);
+    store.set(USERS_KEY, next);
+    setAccounts(next);
+    // 清除该账户的收藏数据
+    store.remove(favoritesKey(email));
+    // 清除当前会话
+    store.remove(CURRENT_KEY);
+    setCurrentEmail(null);
+    setFavorites([]);
+  }, [accounts, currentEmail]);
+
   const toggleFavorite = useCallback(
     (coinId: string) => {
       if (!currentEmail) return;
@@ -110,11 +125,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       register,
       logout,
+      deleteAccount,
       favorites,
       toggleFavorite,
       isFavorite,
     }),
-    [currentUser, login, register, logout, favorites, toggleFavorite, isFavorite],
+    [currentUser, login, register, logout, deleteAccount, favorites, toggleFavorite, isFavorite],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
