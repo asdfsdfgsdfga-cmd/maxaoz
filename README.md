@@ -103,3 +103,4 @@ import { useIsMobile } from "@/hooks/use-mobile";
 | 图表色 | `bg-chart-1` ~ `bg-chart-5` | `--chart-1` ~ `--chart-5` |
 
 HSL 格式使用**空格分隔**：`--primary: hsl(150 60% 40%);`
+# maxaoz
