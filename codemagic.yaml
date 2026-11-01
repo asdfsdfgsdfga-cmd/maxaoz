@@ -36,9 +36,8 @@ workflows:
             archive
           cd "$CM_BUILD_DIR"
           xcode-project build-ipa \
-            --archive-path "$CM_BUILD_DIR/build/App.xcarchive" \
-            --export-method app-store \
-            --output-directory "$CM_BUILD_DIR/build/ios/ipa"
+            -project "ios/App/App.xcodeproj" \
+            -scheme "App"
 
     artifacts:
       - build/ios/ipa/*.ipa
