@@ -1,6 +1,6 @@
 workflows:
   ios-native:
-    name: maxAOZ iOS IPA
+    name: maxAOZX iOS IPA
     max_build_duration: 60
     instance_type: mac_mini_m2
 
@@ -47,7 +47,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - th682319@gmail.com
+          - asdfsdfgsdfga@gmail.com
         notify:
           success: true
           failure: true
