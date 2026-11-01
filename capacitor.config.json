@@ -1,7 +1,7 @@
 {
   "appId": "com.maxaozx.www",
-  "appName": "maxAOZ",
-  "webDir": "dist/capacitor",
+  "appName": "maxAOZX",
+  "webDir": "dist",
   "ios": {
     "contentInset": "always",
     "allowsLinkPreview": false
